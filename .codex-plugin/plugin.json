@@ -1,6 +1,6 @@
 {
   "name": "intent-clarifier",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Clarify vague requests into clear goals, layered needs, personalized constraints, and direct answers.",
   "homepage": "https://github.com/tensely0228/intent-clarifier",
   "repository": "https://github.com/tensely0228/intent-clarifier",
@@ -19,7 +19,7 @@
     "category": "Productivity",
     "websiteURL": "https://github.com/tensely0228/intent-clarifier",
     "defaultPrompt": [
-      "Use Intent Clarifier to clarify my request and answer it directly with minimal questions."
+      "Use $intent-clarifier to clarify my request and answer it directly with minimal questions."
     ]
   }
 }
