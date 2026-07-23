@@ -1,0 +1,25 @@
+{
+  "name": "intent-clarifier",
+  "version": "0.1.0",
+  "description": "Clarify vague requests into clear goals, layered needs, personalized constraints, and direct answers.",
+  "homepage": "https://github.com/tensely0228/intent-clarifier",
+  "repository": "https://github.com/tensely0228/intent-clarifier",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "clarification",
+    "productivity",
+    "self-inquiry"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Intent Clarifier",
+    "shortDescription": "Clarify goals and constraints before acting",
+    "longDescription": "Turn an incomplete or conflicting request into a concise goal, layered needs, personalized constraints, and a direct answer with minimal questions.",
+    "category": "Productivity",
+    "websiteURL": "https://github.com/tensely0228/intent-clarifier",
+    "defaultPrompt": [
+      "Use Intent Clarifier to clarify my request and answer it directly with minimal questions."
+    ]
+  }
+}
