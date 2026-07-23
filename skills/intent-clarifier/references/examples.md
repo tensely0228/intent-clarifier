@@ -1,6 +1,6 @@
 # Examples
 
-These examples are synthetic. Adapt their depth to the user's request rather than copying the wording.
+These examples are synthetic and contain no user data. Adapt their depth to the request rather than copying the wording. The broader evaluation corpus also covers accessibility, caregiving, volunteer, operational, and adversarial contexts without claiming to represent every user or culture.
 
 ## Vague Goal, No Question Needed
 
