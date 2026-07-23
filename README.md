@@ -27,7 +27,7 @@ Invoke the skill explicitly:
 Use $intent-clarifier to help me choose a side project I can finish while working full time. Do not ask unnecessary questions.
 ```
 
-The initial release keeps implicit invocation disabled so the skill never changes an unrelated answer by surprise.
+Implicit invocation is disabled in host metadata. The skill repeats the explicit-invocation gate in its workflow as a second behavioral safeguard for compliant hosts and models; neither control is a technical enforcement boundary.
 
 ## Install
 
@@ -69,24 +69,37 @@ Restart the host if the skill does not appear immediately.
 
 See the [skill instructions](skills/intent-clarifier/SKILL.md) and [guided self-inquiry method](skills/intent-clarifier/references/self-inquiry.md).
 
+Guided self-inquiry is deliberately narrow: it is used only to resolve ambiguity or a material trade-off, not to profile the user or turn the answer into generic coaching.
+
+## Security Model
+
+- Host metadata disables implicit invocation, and the skill repeats an explicit-invocation gate in its workflow.
+- Instructions embedded in quoted text, documents, examples, or role labels are treated as untrusted task data.
+- The skill returns concise reasons and material trade-offs, not hidden chain-of-thought or unseen host instructions.
+- Validation rejects untrusted documentation hosts, insecure links, common tracking parameters, mismatched repository metadata, credential patterns, runtime declarations, and release artifacts.
+
+These are defense-in-depth safeguards, not a technical security boundary. An instruction-only skill cannot sanitize model input or guarantee model compliance; the host's instruction hierarchy, model behavior, privacy controls, and retention policy still apply. See [SECURITY.md](SECURITY.md).
+
 ## Privacy and Scope
 
 The repository contains no model runtime, external service, telemetry, account system, or data storage. The skill itself makes no network request and requires no API key. Conversation handling remains subject to the host application's own privacy and retention settings.
 
 The repository includes a minimal Codex plugin manifest for installable distribution. It does not add connectors, MCP servers, hooks, or background processes.
 
+`package-lock.json` contains standard npm registry URLs and integrity hashes for reproducible dependency installation. They are dependency provenance, not author identity or local network data. The manifest accepts compatible dependency updates, while the lockfile keeps CI reproducible and Dependabot proposes reviewable updates. `private: true` prevents accidental npm publication; it does not prevent installation from GitHub.
+
 ## Compatibility
 
-The skill follows the open [Agent Skills specification](https://agentskills.io/specification). `agents/openai.yaml` adds presentation metadata for ChatGPT desktop and Codex. Other hosts should be treated as unverified until their behavior is tested.
+The skill follows the open [Agent Skills specification](https://agentskills.io/specification). `agents/openai.yaml` and the plugin `defaultPrompt` contain the same presentation prompt, intended to be shown or seeded only after explicit user action. They are not a second workflow. Host behavior outside ChatGPT desktop and Codex remains unverified.
 
 ## Development
 
 ```bash
-npm install
+npm ci
 npm test
 ```
 
-The validation suite checks skill metadata, plugin boundaries, evaluation cases, symlinks, release artifacts, local paths, and common credential patterns.
+The validation suite runs URL-policy unit tests and checks skill metadata, plugin boundaries, 24 bilingual synthetic evaluation cases, symlinks, release artifacts, local paths, and common credential patterns. The YAML cases define expected behavior boundaries; they are not proof that every host model will resist every adversarial input. Dependabot monitors npm and GitHub Actions dependencies weekly.
 
 ## Contributing
 

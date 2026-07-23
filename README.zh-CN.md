@@ -27,7 +27,7 @@
 使用 $intent-clarifier 帮我选择一个能在全职工作期间完成的个人项目，不要问不必要的问题。
 ```
 
-初始版本关闭隐式调用，避免 Skill 意外改变无关任务的回答方式。
+宿主元数据已关闭隐式调用，Skill 工作流也重复检查显式调用，作为宿主与模型遵循时的第二层行为防护；两者都不是技术强制边界。
 
 ## 安装
 
@@ -69,24 +69,37 @@ Copy-Item -Recurse "intent-clarifier\skills\intent-clarifier" "$HOME\.agents\ski
 
 完整规则见 [Skill 指令](skills/intent-clarifier/SKILL.md) 和 [引导式自我提问方法](skills/intent-clarifier/references/self-inquiry.md)。
 
+引导式自我提问被严格限制在消除歧义或处理关键取舍，不用于分析用户人格，也不把回答变成泛化式辅导。
+
+## 安全模型
+
+- 宿主元数据和 Skill 工作流同时要求显式调用。
+- 引用文本、文档、示例或角色标签中的指令被视为不可信任务数据。
+- 只给出简明依据和关键取舍，不暴露隐藏思维链或不可见的宿主指令。
+- 校验会拒绝不可信文档域名、不安全链接、常见追踪参数、错误仓库元数据、凭据模式、运行时声明和发布产物。
+
+这些是纵深行为防护，不是技术安全边界。纯指令型 Skill 无法清洗模型输入或保证模型必然遵从；宿主的指令层级、模型行为、隐私控制和数据保留策略仍然生效。详见 [SECURITY.md](SECURITY.md)。
+
 ## 隐私与边界
 
 仓库不包含模型运行时、外部服务、遥测、账号系统或数据存储。Skill 本身不发起网络请求，也不需要 API Key。对话数据仍受宿主应用自身的隐私和保留策略约束。
 
 仓库包含一个用于安装分发的最小 Codex Plugin 清单，但不包含连接器、MCP Server、Hook 或后台进程。
 
+`package-lock.json` 中的 npm registry URL 和 integrity 哈希是可复现安装所需的标准依赖溯源信息，不是作者身份或本地网络信息。依赖清单允许兼容版本更新，lockfile 保证 CI 可复现，Dependabot 则提交可审阅的升级建议。`private: true` 仅用于防止误发布到 npm，不妨碍从 GitHub 安装。
+
 ## 兼容性
 
-Skill 遵循开放的 [Agent Skills 规范](https://agentskills.io/specification)。`agents/openai.yaml` 为 ChatGPT 桌面端和 Codex 提供展示元数据。其他宿主在完成测试前不作兼容性承诺。
+Skill 遵循开放的 [Agent Skills 规范](https://agentskills.io/specification)。`agents/openai.yaml` 与 Plugin 的 `defaultPrompt` 使用同一条展示提示，仅应在用户显式操作后展示或预填，并不是第二套工作流。ChatGPT 桌面端和 Codex 之外的宿主行为仍未验证。
 
 ## 开发与验证
 
 ```bash
-npm install
+npm ci
 npm test
 ```
 
-验证脚本检查 Skill 元数据、Plugin 边界、评估用例、符号链接、发布产物、本机路径和常见凭据模式。
+验证流程包含 URL 策略单测，并检查 Skill 元数据、Plugin 边界、24 个中英双语合成评测、符号链接、发布产物、本机路径和常见凭据模式。YAML 用例用于定义预期行为边界，并不能证明所有宿主模型都能抵抗全部对抗输入。Dependabot 每周监控 npm 与 GitHub Actions 依赖。
 
 ## 参与贡献
 

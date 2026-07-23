@@ -1,15 +1,16 @@
 {
   "name": "intent-clarifier",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Validation tooling for the Intent Clarifier agent skill.",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "validate": "node scripts/validate.mjs",
-    "test": "npm run validate"
+    "test:unit": "node --test tests/*.test.mjs",
+    "test": "npm run test:unit && npm run validate"
   },
   "devDependencies": {
-    "js-yaml": "4.3.0"
+    "js-yaml": "^4.3.0"
   }
 }
