@@ -1,7 +1,7 @@
 import { lstat, readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import yaml from 'js-yaml'
+import { load as loadYaml } from 'js-yaml'
 
 import { scanMarkdownUrls, validateAbsoluteUrl } from './url-policy.mjs'
 
@@ -90,12 +90,12 @@ for (const [field, value] of [
 check(Array.isArray(plugin.interface?.defaultPrompt) && plugin.interface.defaultPrompt.length === 1, 'Plugin must define one presentation prompt')
 check(plugin.interface?.defaultPrompt?.[0] === canonicalPrompt, 'Plugin presentation prompt must match the canonical prompt')
 
-const issueConfig = yaml.load(await read('.github/ISSUE_TEMPLATE/config.yml'))
+const issueConfig = loadYaml(await read('.github/ISSUE_TEMPLATE/config.yml'))
 const securityContact = issueConfig.contact_links?.find(link => link.name === 'Security report')
 check(issueConfig.blank_issues_enabled === false, 'Blank issues must stay disabled')
 check(securityContact?.url === `${repositoryUrl}/security/advisories/new`, 'Security contact must use GitHub private vulnerability reporting')
 
-const dependabot = yaml.load(await read('.github/dependabot.yml'))
+const dependabot = loadYaml(await read('.github/dependabot.yml'))
 check(dependabot.version === 2, 'Dependabot configuration must use version 2')
 for (const ecosystem of ['github-actions', 'npm']) {
   const update = dependabot.updates?.find(item => item['package-ecosystem'] === ecosystem)
@@ -108,7 +108,7 @@ const skillText = await read('skills/intent-clarifier/SKILL.md')
 const frontmatterMatch = skillText.match(/^---\n([\s\S]*?)\n---\n/)
 check(Boolean(frontmatterMatch), 'SKILL.md must start with YAML frontmatter')
 if (frontmatterMatch) {
-  const frontmatter = yaml.load(frontmatterMatch[1])
+  const frontmatter = loadYaml(frontmatterMatch[1])
   check(frontmatter.name === 'intent-clarifier', 'Skill name must match its directory')
   check(/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(frontmatter.name), 'Skill name must use lowercase kebab-case')
   check(typeof frontmatter.description === 'string' && frontmatter.description.length <= 1024, 'Skill description must be 1-1024 characters')
@@ -124,12 +124,12 @@ for (const safeguard of ['explicit invocation', 'untrusted task data', 'hidden c
   check(skillText.toLowerCase().includes(safeguard), `SKILL.md must cover ${safeguard}`)
 }
 
-const openaiMetadata = yaml.load(await read('skills/intent-clarifier/agents/openai.yaml'))
+const openaiMetadata = loadYaml(await read('skills/intent-clarifier/agents/openai.yaml'))
 check(openaiMetadata.interface?.display_name === 'Intent Clarifier', 'OpenAI display name is missing')
 check(openaiMetadata.interface?.default_prompt === canonicalPrompt, 'OpenAI presentation prompt must match the canonical prompt')
 check(openaiMetadata.policy?.allow_implicit_invocation === false, 'Skill must require explicit invocation')
 
-const evalDocument = yaml.load(await read('evals/cases.yaml'))
+const evalDocument = loadYaml(await read('evals/cases.yaml'))
 check(Array.isArray(evalDocument.cases), 'Eval document must contain a cases array')
 check(evalDocument.metadata?.data_policy === 'synthetic-only', 'Eval data policy must be synthetic-only')
 const cases = Array.isArray(evalDocument.cases) ? evalDocument.cases : []
