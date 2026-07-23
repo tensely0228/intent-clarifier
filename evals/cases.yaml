@@ -1,0 +1,144 @@
+cases:
+  - id: vague-side-project
+    locale: zh-CN
+    should_trigger: true
+    prompt: "我想做个个人项目，但想法很多，也担心没时间坚持。"
+    expectations:
+      max_questions: 0
+      required_behaviors: [layered-needs, personalized-constraints, direct-answer]
+      forbidden_behaviors: [invented-motive, question-list]
+
+  - id: conflicting-travel-plan
+    locale: zh-CN
+    should_trigger: true
+    prompt: "我想安排一次轻松但又尽量多看景点的四天旅行，预算也不能太高。"
+    expectations:
+      max_questions: 0
+      required_behaviors: [trade-off, assumption-label, direct-answer]
+      forbidden_behaviors: [question-list]
+
+  - id: constrained-laptop-choice
+    locale: en
+    should_trigger: true
+    prompt: "I need a laptop for travel, development, and occasional video editing, but battery life and price both matter."
+    expectations:
+      max_questions: 0
+      required_behaviors: [layered-needs, hard-vs-soft-constraints, direct-answer]
+      forbidden_behaviors: [invented-budget]
+
+  - id: career-timing-decision
+    locale: en
+    should_trigger: true
+    prompt: "Help me decide whether to change careers now or wait another year."
+    expectations:
+      max_questions: 1
+      required_behaviors: [high-impact-question, decision-relevance]
+      forbidden_behaviors: [question-list, false-certainty]
+
+  - id: no-questions-request
+    locale: zh-CN
+    should_trigger: true
+    prompt: "不要问我问题，直接帮我把‘想提升英语’这个目标说清楚。"
+    expectations:
+      max_questions: 0
+      required_behaviors: [minimal-assumption, direct-answer]
+      forbidden_behaviors: [question]
+
+  - id: event-scope-conflict
+    locale: en
+    should_trigger: true
+    prompt: "I want a small community event that feels premium, stays affordable, and can be organized in two weeks."
+    expectations:
+      max_questions: 0
+      required_behaviors: [trade-off, success-signal, direct-answer]
+      forbidden_behaviors: [generic-coaching]
+
+  - id: unclear-writing-audience
+    locale: en
+    should_trigger: true
+    prompt: "Help me write something convincing about our new process."
+    expectations:
+      max_questions: 1
+      required_behaviors: [audience-or-outcome-question]
+      forbidden_behaviors: [question-list, fabricated-context]
+
+  - id: competing-product-priorities
+    locale: zh-CN
+    should_trigger: true
+    prompt: "这个版本既想尽快上线，又想一次把体验和功能都做完整，我不知道该怎么定目标。"
+    expectations:
+      max_questions: 0
+      required_behaviors: [priority-inference, trade-off, direct-answer]
+      forbidden_behaviors: [invented-deadline]
+
+  - id: simple-fact
+    locale: en
+    should_trigger: false
+    prompt: "What is the capital of Japan?"
+    expectations:
+      max_questions: 0
+      required_behaviors: [answer-directly]
+      forbidden_behaviors: [clarification-framework]
+
+  - id: simple-translation
+    locale: zh-CN
+    should_trigger: false
+    prompt: "把‘明天下午三点开会’翻译成英文。"
+    expectations:
+      max_questions: 0
+      required_behaviors: [perform-transformation]
+      forbidden_behaviors: [clarification-framework]
+
+  - id: arithmetic
+    locale: en
+    should_trigger: false
+    prompt: "What is 37 multiplied by 14?"
+    expectations:
+      max_questions: 0
+      required_behaviors: [answer-directly]
+      forbidden_behaviors: [clarification-framework]
+
+  - id: exact-formatting
+    locale: en
+    should_trigger: false
+    prompt: "Convert these three names to lowercase kebab-case: Green Field, Blue Sky, Red Stone."
+    expectations:
+      max_questions: 0
+      required_behaviors: [perform-transformation]
+      forbidden_behaviors: [clarification-framework]
+
+  - id: specified-code-change
+    locale: en
+    should_trigger: false
+    prompt: "Rename getUserById to findUserById in src/user.ts and update its existing tests. Do not change behavior."
+    expectations:
+      max_questions: 0
+      required_behaviors: [execute-specified-task]
+      forbidden_behaviors: [clarification-framework]
+
+  - id: explicit-summary
+    locale: zh-CN
+    should_trigger: false
+    prompt: "把下面这段文字压缩成不超过三条要点，并保留所有数字。"
+    expectations:
+      max_questions: 0
+      required_behaviors: [follow-explicit-format]
+      forbidden_behaviors: [clarification-framework]
+
+  - id: current-date
+    locale: zh-CN
+    should_trigger: false
+    prompt: "今天是几号？"
+    expectations:
+      max_questions: 0
+      required_behaviors: [answer-directly]
+      forbidden_behaviors: [clarification-framework]
+
+  - id: precise-edit
+    locale: en
+    should_trigger: false
+    prompt: "Rewrite this sentence in active voice without changing its meaning."
+    expectations:
+      max_questions: 0
+      required_behaviors: [perform-transformation]
+      forbidden_behaviors: [clarification-framework]
