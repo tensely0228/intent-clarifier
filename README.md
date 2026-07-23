@@ -95,11 +95,11 @@ The skill follows the open [Agent Skills specification](https://agentskills.io/s
 ## Development
 
 ```bash
-npm ci
+npm ci --ignore-scripts
 npm test
 ```
 
-The validation suite runs URL-policy unit tests and checks skill metadata, plugin boundaries, 24 bilingual synthetic evaluation cases, symlinks, release artifacts, local paths, and common credential patterns. The YAML cases define expected behavior boundaries; they are not proof that every host model will resist every adversarial input. Dependabot monitors npm and GitHub Actions dependencies weekly.
+The validation suite runs URL-policy and repository-boundary unit tests and checks the exact instruction-only file allowlist, skill metadata, plugin boundaries, 24 bilingual synthetic evaluation cases, symlinks, release artifacts, local paths, and common credential patterns. The YAML cases define expected behavior boundaries; model execution remains a manual, host-dependent release check and is not proof that every host model will resist every adversarial input. Dependabot monitors npm and GitHub Actions dependencies weekly.
 
 ## Contributing
 

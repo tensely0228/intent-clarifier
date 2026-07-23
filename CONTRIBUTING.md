@@ -20,7 +20,7 @@ Thank you for improving Intent Clarifier. Keep contributions focused on clearer 
 6. Run the validation suite.
 
 ```bash
-npm ci
+npm ci --ignore-scripts
 npm test
 ```
 

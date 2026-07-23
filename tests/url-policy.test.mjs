@@ -33,12 +33,25 @@ test('rejects insecure, credentialed, tracked, and untrusted URLs', () => {
 test('rejects active and protocol-relative Markdown destinations', () => {
   const markdown = [
     '[unsafe](javascript:alert(1))',
+    '[encoded](java&#x73;cript:alert(1))',
+    '<javascript:alert(1)>',
+    '<a href=javascript:alert(1)>',
     '[ambiguous](//example.invalid/path)'
   ].join('\n')
   const failures = scanMarkdownUrls(markdown, { allowedHosts, source: 'fixture.md' })
 
-  assert.ok(failures.some(message => message.includes('unsafe URL scheme')))
+  assert.equal(failures.filter(message => message.includes('unsafe URL scheme')).length, 3)
   assert.ok(failures.some(message => message.includes('protocol-relative URL')))
+})
+
+test('decodes numeric entities and strips control whitespace before checking schemes', () => {
+  const markdown = [
+    '<a href="java&#115;cript:alert(1)">x</a>',
+    '<img src="java\tscript:alert(1)">'
+  ].join('\n')
+  const failures = scanMarkdownUrls(markdown, { allowedHosts, source: 'fixture.md' })
+
+  assert.equal(failures.filter(message => message.includes('unsafe URL scheme')).length, 2)
 })
 
 test('scans plain URLs as well as Markdown links', () => {

@@ -3,6 +3,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { load as loadYaml } from 'js-yaml'
 
+import { allowedRepositoryFiles, findUnexpectedFiles, toLogicalPath } from './repository-policy.mjs'
 import { scanMarkdownUrls, validateAbsoluteUrl } from './url-policy.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
@@ -24,38 +25,21 @@ async function collectFiles(directory, relative = '') {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     if (entry.name === '.git' || entry.name === 'node_modules') continue
     const absolutePath = path.join(directory, entry.name)
-    const relativePath = path.join(relative, entry.name)
+    const relativePath = toLogicalPath(path.join(relative, entry.name))
     const stat = await lstat(absolutePath)
-    check(!stat.isSymbolicLink(), `Symbolic links are not allowed: ${relativePath}`)
+    if (stat.isSymbolicLink()) {
+      failures.push(`Symbolic links are not allowed: ${relativePath}`)
+      continue
+    }
     if (stat.isDirectory()) files.push(...await collectFiles(absolutePath, relativePath))
     else files.push(relativePath)
   }
   return files
 }
 
-const requiredFiles = [
-  '.codex-plugin/plugin.json',
-  '.github/dependabot.yml',
-  '.github/workflows/validate.yml',
-  'README.md',
-  'README.zh-CN.md',
-  'CONTRIBUTING.md',
-  'SECURITY.md',
-  'LICENSE',
-  'evals/cases.yaml',
-  'package-lock.json',
-  'package.json',
-  'scripts/url-policy.mjs',
-  'scripts/validate.mjs',
-  'skills/intent-clarifier/SKILL.md',
-  'skills/intent-clarifier/agents/openai.yaml',
-  'skills/intent-clarifier/references/self-inquiry.md',
-  'skills/intent-clarifier/references/examples.md',
-  'tests/url-policy.test.mjs'
-]
-
 const allFiles = await collectFiles(root)
-for (const file of requiredFiles) check(allFiles.includes(file), `Missing required file: ${file}`)
+for (const file of allowedRepositoryFiles) check(allFiles.includes(file), `Missing required file: ${file}`)
+for (const file of findUnexpectedFiles(allFiles)) failures.push(`Unexpected repository file: ${file}`)
 
 const packageManifest = JSON.parse(await read('package.json'))
 const packageLock = JSON.parse(await read('package-lock.json'))

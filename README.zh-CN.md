@@ -95,11 +95,11 @@ Skill 遵循开放的 [Agent Skills 规范](https://agentskills.io/specification
 ## 开发与验证
 
 ```bash
-npm ci
+npm ci --ignore-scripts
 npm test
 ```
 
-验证流程包含 URL 策略单测，并检查 Skill 元数据、Plugin 边界、24 个中英双语合成评测、符号链接、发布产物、本机路径和常见凭据模式。YAML 用例用于定义预期行为边界，并不能证明所有宿主模型都能抵抗全部对抗输入。Dependabot 每周监控 npm 与 GitHub Actions 依赖。
+验证流程包含 URL 策略和仓库边界单测，并检查纯指令文件精确白名单、Skill 元数据、Plugin 边界、24 个中英双语合成评测、符号链接、发布产物、本机路径和常见凭据模式。YAML 用例用于定义预期行为边界；模型执行仍是依赖宿主的人工发布检查，不能证明所有宿主模型都能抵抗全部对抗输入。Dependabot 每周监控 npm 与 GitHub Actions 依赖。
 
 ## 参与贡献
 
